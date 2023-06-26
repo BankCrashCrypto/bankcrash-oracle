@@ -6,6 +6,10 @@ app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
 global db
+global db_heatmap
+global db_bank_crashes
+global db_bank_list
+global db_today_crashes
 
 
 @app.route('/bank_mdds')
