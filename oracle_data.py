@@ -75,8 +75,8 @@ class DB_Banks:
       
     def prepare_structures(self):
         mdds = sorted(self.all, key=lambda x: x["size"], reverse=True)
-        blist = self.bank_lists()
-        stats, crashes_stats = self.bank_stats()
+        blist = self.get_bank_lists()
+        stats, crashes_stats = self.get_bank_stats()
         crashes_history = self.crashfilterformat()
         crashes_today = list(filter(lambda crash: crash["CRASH_date"]>today_ts(), self.bank_crashes_history))
         # we assign in one step to keep as atomic as possible... Stricter atomicity isn't important actually...
@@ -88,10 +88,10 @@ class DB_Banks:
         self.prepare_structures()
         return 
       
-    def bank_lists(self):
+    def get_bank_lists(self):
         return list(map(bank_format, self.all))
       
-    def bank_stats(self):
+    def get_bank_stats(self):
         stats = {
           SMALL_BANK: 0,
           MEDIUM_BANK: 0,
