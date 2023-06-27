@@ -58,14 +58,14 @@ def get_bank_crashes_today():
 if __name__ == '__main__':
   data.refresh()
   # run_data_server(data)
-  with app.app_context():
-    (get_bank_list())
-    (get_bank_mdds())
-    (get_bank_stats())
-    (get_bank_crashes_stats())
-    (get_bank_crashes_history())
-    (get_bank_crashes_today())
-  # app.run(port=5000, debug=True)
+  # with app.app_context():
+  #   (get_bank_list())
+  #   (get_bank_mdds())
+  #   (get_bank_stats())
+  #   (get_bank_crashes_stats())
+  #   (get_bank_crashes_history())
+  #   (get_bank_crashes_today())
+  app.run(port=5000, debug=True)
   
   
 
