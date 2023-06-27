@@ -38,3 +38,4 @@ def write_to_blockchain(is_small_bank_crash, is_middle_bank_crash, is_lage_bank_
     print(tx_receipt)
 
 # %%
+# %%

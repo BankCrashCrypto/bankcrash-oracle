@@ -1,28 +1,72 @@
+#%%
 from flask import Flask, jsonify
-from oracle import download_all_data
 from flask_cors import CORS
+from oracle_data import DB_Banks
+from oracle import run_data_server
+
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
-global db
-global db_heatmap
-global db_bank_crashes
-global db_bank_list
-global db_today_crashes
+data = DB_Banks()
 
+
+@app.route('/bank_list')
+def get_bank_list():
+  print(data.bank_list)
+  responee = jsonify(data.bank_list)
+  responee.headers['Content-Type'] = 'application/json'
+  return responee
 
 @app.route('/bank_mdds')
-def get_data():
-  global db
-  responee = jsonify(db)
+def get_bank_mdds():
+  print(data.bank_mdds)
+  responee = jsonify(data.bank_mdds)
+  responee.headers['Content-Type'] = 'application/json'
+  return responee
+
+@app.route('/bank_stats')
+def get_bank_stats():
+  print(data.bank_stats)
+  responee = jsonify(data.bank_stats)
   responee.headers['Content-Type'] = 'application/json'
   return responee
 
 
-if __name__ == '__main__':
+@app.route('/bank_crashes_stats')
+def get_bank_crashes_stats():
+  print(data.bank_crashes_stats)
+  responee = jsonify(data.bank_crashes_stats)
+  responee.headers['Content-Type'] = 'application/json'
+  return responee
 
-  db = download_all_data()
-  app.run(port=5000, debug=True)
+@app.route('/bank_crashes_history')
+def get_bank_crashes_history():
+  print(data.bank_crashes_history)
+  responee = jsonify(data.bank_crashes_history)
+  responee.headers['Content-Type'] = 'application/json'
+  return responee
+
+@app.route('/bank_crashes_today')
+def get_bank_crashes_today():
+  print(data.bank_crashes_today)
+  responee = jsonify(data.bank_crashes_today)
+  responee.headers['Content-Type'] = 'application/json'
+  return responee
+
+#%%
+if __name__ == '__main__':
+  data.refresh()
+  # run_data_server(data)
+  with app.app_context():
+    (get_bank_list())
+    (get_bank_mdds())
+    (get_bank_stats())
+    (get_bank_crashes_stats())
+    (get_bank_crashes_history())
+    (get_bank_crashes_today())
+  # app.run(port=5000, debug=True)
   
   
+
+# %%

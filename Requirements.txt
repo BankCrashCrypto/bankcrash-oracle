@@ -4,3 +4,4 @@ p_tqdm
 flask
 flask-cors
 web3
+asyncio
