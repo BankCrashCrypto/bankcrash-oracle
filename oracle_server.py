@@ -65,7 +65,7 @@ if __name__ == '__main__':
   #   (get_bank_crashes_stats())
   #   (get_bank_crashes_history())
   #   (get_bank_crashes_today())
-  app.run(port=5000, debug=True)
+  app.run(port=5000)#, debug=True)
   
   
 
