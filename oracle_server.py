@@ -54,7 +54,11 @@ def get_bank_crashes_today():
   responee.headers['Content-Type'] = 'application/json'
   return responee
 
+def create_app():
+   return app
+ 
 #%%
+from waitress import serve
 if __name__ == '__main__':
   data.refresh()
   # run_data_server(data)
@@ -65,7 +69,8 @@ if __name__ == '__main__':
   #   (get_bank_crashes_stats())
   #   (get_bank_crashes_history())
   #   (get_bank_crashes_today())
-  app.run(port=5000)#, debug=True)
+  serve(app, host="0.0.0.0", port=8080)
+  # app.run(port=5000)#, debug=True)
   
   
 
