@@ -69,7 +69,8 @@ class DB_Banks:
     def download(self):
         all_banks = pd.read_csv("banks.csv", names=["name", "ticker"])
         print(all_banks)
-        unfiltered_data = p_map(request_data, all_banks["ticker"][300:340])
+        # unfiltered_data = p_map(request_data, all_banks["ticker"][300:340])
+        unfiltered_data = p_map(request_data, all_banks["ticker"])
         self.all = list(filter(lambda d: d, unfiltered_data))
         return
       
