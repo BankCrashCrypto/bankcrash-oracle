@@ -5,11 +5,11 @@ VERY important codes. These are the Core that trackt the world current stage and
 pip install -r Requirements.txt 
 
 # API endpoints
-https://bankcrash.gg/api/bank_crashes_today
-https://bankcrash.gg/api/bank_crashes_history
-https://bankcrash.gg/api/bank_crashes_stats
-https://bankcrash.gg/api/bank_stats
-https://bankcrash.gg/api/bank_list
-https://bankcrash.gg/api/bank_mdds
+https://api.bankcrash.gg/bank_crashes_today
+https://api.bankcrash.gg/bank_crashes_history
+https://api.bankcrash.gg/bank_crashes_stats
+https://api.bankcrash.gg/bank_stats
+https://api.bankcrash.gg/bank_list
+https://api.bankcrash.gg/bank_mdds
 
 
