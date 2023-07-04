@@ -1,49 +1,30 @@
 #%%
+import requests
+import socket
 import time
 import asyncio
+from oracle_data import DB_Banks
+from oracle_server import get_bank_list, get_bank_mdds, get_bank_stats,get_bank_crashes_today, get_bank_crashes_history, get_bank_crashes_stats, app, data
+from waitress import serve
+
 
 async def async_run_data_server(data):
-    while True:
-        time.sleep(1000)
-        data.refresh()
-  
-def run_data_server(data):
+  while True:
+    time.sleep(1000)
     data.refresh()
-    asyncio.run(async_run_data_server(data)) 
+  
 
+data.refresh()
+print("data is initialized!")
 
-if __name__ == '__main__':
-    from oracle_data import DB_Banks
-    data = DB_Banks()
-    run_data_server(data)
+loop = asyncio.get_event_loop()
+loop.create_task(async_run_data_server(data))
 
+hostname = socket.gethostname()
+ip_address = socket.gethostbyname(hostname)# %%
+true_ip_address = requests.get('http://ifconfig.me').text
+port = 8080
+print(f"Running server on http://{ip_address}:{port}  ({true_ip_address}) {hostname}")
+serve(app, host=hostname, port=port)
 
-# %%
-if __name__ == '__main__':
-  ticker = yf.Ticker("BBCA.JK")
-  ticker = yf.Ticker("DANS.VI")
-
-# %%
-if __name__ == '__main__':
-  print(ticker.info)
-# %%
-if __name__ == '__main__':
-  res = ticker.history(period="120mo")
-
-# %%
-if __name__ == '__main__':
-  _, maxv = argmax(res["High"]), max(res["High"])
-  print(maxv)
-
-# %%
-if __name__ == '__main__':
-  tickername = "DANS.VI"
-  tickername = "BBCA.JK"
-  tickername = "JPM"
-  ticker = yf.Ticker(tickername)
-  res = ticker.history(period="120mo")
-  _, maxv = argmax(res["High"]), max(res["High"])
-  estimated_marketcap_million = ticker.info["marketCap"] * (maxv/res["Close"][-1]) / 1_000_000 / 1_000
-  mdd = (1-res["Close"][-1] / maxv )* 100
-  print(tickername, estimated_marketcap_million, mdd, res["Close"][-1], maxv)
-# %%
+#%%

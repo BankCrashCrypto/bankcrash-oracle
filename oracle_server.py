@@ -2,7 +2,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from oracle_data import DB_Banks
-from oracle import run_data_server
 
 
 app = Flask(__name__)
@@ -58,8 +57,8 @@ def create_app():
    return app
  
 #%%
-from waitress import serve
 if __name__ == '__main__':
+  from waitress import serve
   data.refresh()
   # run_data_server(data)
   # with app.app_context():
@@ -69,8 +68,8 @@ if __name__ == '__main__':
   #   (get_bank_crashes_stats())
   #   (get_bank_crashes_history())
   #   (get_bank_crashes_today())
-  serve(app, host="0.0.0.0", port=8080)
   # app.run(port=5000)#, debug=True)
+  serve(app, host="0.0.0.0", port=8080)
   
   
 
