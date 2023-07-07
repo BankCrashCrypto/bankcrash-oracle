@@ -5,6 +5,8 @@ import yfinance as yf
 import requests
 from p_tqdm import p_map
 import math
+import json
+from config_accounts import EOD_APY_KEY
 
 LARGE_BANK_SIZE  = 500
 MEDIUM_BANK_SIZE = 50
@@ -68,8 +70,9 @@ class DB_Banks:
 
     def download(self):
         all_banks = pd.read_csv("banks.csv", names=["name", "ticker"])
-        print(all_banks)
-        # unfiltered_data = p_map(request_data, all_banks["ticker"][300:340])
+        print("CSV is loaded!")
+        # print(all_banks)
+        # unfiltered_data = map(request_data, all_banks["ticker"][307:340])
         unfiltered_data = p_map(request_data, all_banks["ticker"])
         self.all = list(filter(lambda d: d, unfiltered_data))
         return
@@ -137,17 +140,31 @@ def argmax(iterable):
 
 
 def request_data(tickername):
+  print((tickername))
   if tickername in ["BIMB.KL", "DANS.VI", "MTPOF"]:
     return {}
   try:
     ticker = yf.Ticker(tickername)
     res = ticker.history(period="60mo")
+    if res["High"].size==0:
+      return{}
+    url = f"https://eodhistoricaldata.com/api/historical-market-cap/{tickername}?from=2000-01-01&to=2024-12-31&api_token={EOD_APY_KEY}"
+    MC_res = requests.get(url)
   except requests.exceptions.HTTPError as e:
     print(e)
     return {}
   max_i, maxv = argmax(res["High"]), max(res["High"])
   minv = min(res["Close"][max_i:])
-  estimated_marketcap_million = ticker.info["marketCap"] * (maxv/res["Close"][-1]) / 1_000_000 / 1_000
+  if MC_res.text=="Ticker Not Found.":
+    print("NOT FOUND????? ", tickername)
+    return {}
+  market_caps = list(json.loads(MC_res.text).values())
+  if len(market_caps) == 0:
+    print("THIS IS NOT OK!! ??? ", tickername)
+    print(MC_res.text)
+    return {}
+  max_marketcap = max(market_caps, key=lambda x:x['value'])
+  marketcap_million = max_marketcap["value"] / 1_000_000 # ticker.info["marketCap"] * (maxv/res["Close"][-1]) / 1_000_000 / 1_000
   mdd = (1-minv / maxv) * 100
   # print(list(row for row in res.iloc[max_i:].iterrows() if 1-row[1]["Close"] / maxv < CRASH_MDD_VALUE/100))
   first_mdd_date = next((i for i, row in res.iloc[max_i:].iterrows() if (1-row["Close"] / maxv > CRASH_MDD_VALUE/100)), -1)
@@ -155,16 +172,16 @@ def request_data(tickername):
     print(first_mdd_date)
   crash_date_ts = None if first_mdd_date == -1 else int(first_mdd_date.timestamp())
   if minv < 0 or maxv < 0:
-    estimated_marketcap_million = abs(estimated_marketcap_million)
+    marketcap_million = abs(marketcap_million)
     mdd = 0
-  if mdd <= 0 or estimated_marketcap_million < 0 or minv < 0 or maxv < 0:
-    print(tickername, estimated_marketcap_million, mdd)
+  if mdd <= 0 or marketcap_million < 0 or minv < 0 or maxv < 0:
+    print(tickername, marketcap_million, mdd)
   # print(tickername, estimated_marketcap, mdd)
   return {
       "shortname": ticker.info['shortName'],
       "ticker": tickername,
-      "size": round(math.log10(estimated_marketcap_million), 3),
-      "MC": round(estimated_marketcap_million, 0),
+      "size": round(math.log10(marketcap_million), 3),
+      "MC": round(marketcap_million, 0),
       "price": log_round(minv),
       "MDD": log_round(mdd),
       "CRASH_date": crash_date_ts,

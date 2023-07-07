@@ -3,8 +3,7 @@ import requests
 import socket
 import time
 import asyncio
-from oracle_data import DB_Banks
-from oracle_server import get_bank_list, get_bank_mdds, get_bank_stats,get_bank_crashes_today, get_bank_crashes_history, get_bank_crashes_stats, app, data
+from oracle_server import app, data
 from waitress import serve
 
 
@@ -14,6 +13,7 @@ async def async_run_data_server(data):
     data.refresh()
   
 
+print("data is loading...")
 data.refresh()
 print("data is initialized!")
 
