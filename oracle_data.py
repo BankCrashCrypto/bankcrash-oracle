@@ -7,6 +7,7 @@ from p_tqdm import p_map
 import math
 import json
 from config_accounts import EOD_APY_KEY
+from oracle_blockchain import sync_blockchain_information
 
 LARGE_BANK_SIZE  = 500
 MEDIUM_BANK_SIZE = 50
@@ -85,6 +86,7 @@ class DB_Banks:
         crashes_today = list(filter(lambda crash: crash["CRASH_date"]>today_ts(), self.bank_crashes_history))
         # we assign in one step to keep as atomic as possible... Stricter atomicity isn't important actually...
         self.bank_mdds, self.bank_list, self.bank_stats, self.bank_crashes_stats, self.bank_crashes_history, self.bank_crashes_today = mdds, blist, stats, crashes_stats, crashes_history, crashes_today 
+        sync_blockchain_information(self.bank_crashes_stats[SMALL_BANK],self.bank_crashes_stats[MEDIUM_BANK],self.bank_crashes_stats[LARGE_BANK])
         return
       
     def refresh(self):
@@ -134,7 +136,6 @@ def log_round(number):
       return round(number, 0)
     return round(number, -magnitude + 3)
 
-
 def argmax(iterable):
   return max(enumerate(iterable), key=lambda x: x[1])[0]
 
@@ -148,7 +149,7 @@ def request_data(tickername):
     res = ticker.history(period="60mo")
     if res["High"].size==0:
       return{}
-    url = f"https://eodhistoricaldata.com/api/historical-market-cap/{tickername}?from=2000-01-01&to=2024-12-31&api_token={EOD_APY_KEY}"
+    url = f"https://eodhistoricaldata.com/api/historical-market-cap/{tickername}?from=2000-01-01&to=2030-12-31&api_token={EOD_APY_KEY}"
     MC_res = requests.get(url)
   except requests.exceptions.HTTPError as e:
     print(e)
