@@ -75,6 +75,7 @@ class DB_Banks:
           if bank["MDD"] > CRASH_MDD_VALUE:
             crashes[bank_type] += 1
         return stats, crashes
+      
     def crashfilterformat(self):
       return [{
           "ticker": bank["ticker"],

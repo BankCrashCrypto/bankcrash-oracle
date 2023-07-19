@@ -16,7 +16,7 @@ def get_historical_exchange_rate(base_currency, target_currency, date):
 
 	if response.status_code == 200:
 		data = json.loads(response.text)
-		rate = data['rates'][target_currency] / data['rates'][base_currency]
+		rate = data['rates'][target_currency.upper()] / data['rates'][base_currency.upper()]
 		return rate
 	else:
 		print(response.text)
