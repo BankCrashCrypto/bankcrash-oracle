@@ -72,7 +72,7 @@ class DB_Banks:
         for bank in self.all:
           bank_type = bank_size_category(bank)
           stats[bank_type] += 1
-          if bank["MDD"] > CRASH_MDD_VALUE:
+          if bank["CRASH_date"] != None:
             crashes[bank_type] += 1
         return stats, crashes
       
@@ -105,22 +105,9 @@ def bank_format(bank):
         "price": bank["price"],
         "MDD": bank["MDD"],
         "CRASH_date": bank["CRASH_date"],
-        "crashed": bank["MDD"] > CRASH_MDD_VALUE,
+        "crashed": bank["CRASH_date"] != None,
       }
   
-def today_crashes(banks):
-    today_crashes = {
-      SMALL_BANK: 0,
-      MEDIUM_BANK: 0,
-      LARGE_BANK: 0,
-    }
-    for bank in banks:
-      if bank["MDD"] <= CRASH_MDD_VALUE:
-        continue
-      today_crashes[bank_size_category(bank)] += 1
-      
-    return today_crashes
-
 
   
 def request_data(tickername):
