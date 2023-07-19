@@ -6,7 +6,7 @@ import yfinance as yf
 import requests
 import math
 import json
-from currency import get_historical_exchange_rate
+from oracle_currency import get_historical_exchange_rate
 from oracle_EOD import recalculate_shares_from_EOD, get_market_cap_from_EOD
 from oracle_blockchain import sync_blockchain_information
 from utils import argmax, log_round
@@ -134,7 +134,7 @@ def request_data(tickername):
     res = ticker.history(period="120mo", proxy="91.203.25.28:4153")  # BUSE divident event out of range???
     if res["High"].size==0:
       return {}
-    MC_res = get_market_cap_from_EOD(tickername)
+    MC_list = get_market_cap_from_EOD(tickername)
   except requests.exceptions.HTTPError as e:
     print(e)
     return {}
@@ -143,25 +143,15 @@ def request_data(tickername):
   correct_data(tickername, res)
   max_i, maxv = argmax(res["High"]), max(res["High"])
   minv = min(res["Close"][max_i:])
-  if MC_res.text[0:14]=="Error occurred":
-    print(MC_res.text)
-    print("WE throw a valid bank away!!! THIS IS NOT GOOD... WHAT is going on with the server?")
-    return {}
-  if MC_res.text=="Ticker Not Found.":
+  
+  if len(MC_list) == 0:
     market_caps = recalculate_shares_from_EOD(tickername, res)
     if len(market_caps)==0:
-      print("TICKER NOT FOUND & couldn't recalculate")
+      print("TICKER FOUND BUT zero value & couldn't recalculate")
       return {}
   else:
-    # print(MC_res.text)
-    market_caps = ([{"value": dat["value"], "date": datetime.timestamp(datetime.strptime(dat["date"],"%Y-%m-%d")), } for dat in json.loads(MC_res.text).values()])
-    if len(market_caps) == 0:
-      market_caps = recalculate_shares_from_EOD(tickername, res)
-      if len(market_caps)==0:
-        print("TICKER FOUND BUT zero value & couldn't recalculate")
-        return {}
-  # if len(market_caps) < 10:
-  #   print(len(market_caps), market_caps)
+    market_caps = ([{"value": dat["value"], "date": datetime.timestamp(datetime.strptime(dat["date"],"%Y-%m-%d")), } for dat in MC_list])
+      
   max_marketcap = max(market_caps, key=lambda x:x['value'])
   marketcap_million = max_marketcap["value"] / 1_000_000 # ticker.info["marketCap"] * (maxv/res["Close"][-1]) / 1_000_000 / 1_000
   mdd = (1-minv / maxv) * 100
@@ -173,21 +163,17 @@ def request_data(tickername):
   if first_crash_date != -1 :
     print(first_crash_date, max_marketcap)
   crash_date_ts = None if first_crash_date == -1 else int(first_crash_date.timestamp())
-  if minv < 0 or maxv < 0:
-    marketcap_million = abs(marketcap_million)
-    mdd = 0
+
+    # marketcap_million, mdd = abs(marketcap_million), 0
   ticker_info = BANK_INFO[tickername]
   currenci = ticker_info["currency"]
-  # print(currenci)
-  # print(max_marketcap["date"])
-  # print(datetime.fromtimestamp(max_marketcap["date"]).strftime('%Y-%m-%d'))
   exchrate = get_historical_exchange_rate(currenci, 'USD', datetime.fromtimestamp(max_marketcap["date"]).strftime('%Y-%m-%d'))
   marketcap_million_usd = marketcap_million * exchrate
   
   if mdd <= 0 or marketcap_million_usd < 0 or minv < 0 or maxv < 0:
     print(tickername, marketcap_million_usd, mdd)
-  # print(tickername, estimated_marketcap, mdd)
-  # ticker_info = {"shortName": "troll"}
+  assert not (minv < 0 or maxv < 0)
+    
   return {
       "shortname": ticker_info['shortName'],
       "ticker": tickername,
