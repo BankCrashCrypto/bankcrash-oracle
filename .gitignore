@@ -1,0 +1,6 @@
+
+archive/
+
+__pycache__/
+cache_EXR.all_request/
+cache.all_request/
