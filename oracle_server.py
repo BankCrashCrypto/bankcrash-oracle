@@ -12,43 +12,42 @@ data = DB_Banks()
 
 @app.route('/bank_list')
 def get_bank_list():
-  print(data.bank_list)
+  # print(data.bank_list)
   responee = jsonify(data.bank_list)
   responee.headers['Content-Type'] = 'application/json'
   return responee
 
 @app.route('/bank_mdds')
 def get_bank_mdds():
-  print(data.bank_mdds)
+  # print(data.bank_mdds)
   responee = jsonify(data.bank_mdds)
   responee.headers['Content-Type'] = 'application/json'
   return responee
 
 @app.route('/bank_stats')
 def get_bank_stats():
-  print(data.bank_stats)
+  # print(data.bank_stats)
   responee = jsonify(data.bank_stats)
   responee.headers['Content-Type'] = 'application/json'
   return responee
 
-
 @app.route('/bank_crashes_stats')
 def get_bank_crashes_stats():
-  print(data.bank_crashes_stats)
+  # print(data.bank_crashes_stats)
   responee = jsonify(data.bank_crashes_stats)
   responee.headers['Content-Type'] = 'application/json'
   return responee
 
 @app.route('/bank_crashes_history')
 def get_bank_crashes_history():
-  print(data.bank_crashes_history)
+  # print(data.bank_crashes_history)
   responee = jsonify(data.bank_crashes_history)
   responee.headers['Content-Type'] = 'application/json'
   return responee
 
 @app.route('/bank_crashes_today')
 def get_bank_crashes_today():
-  print(data.bank_crashes_today)
+  # print(data.bank_crashes_today)
   responee = jsonify(data.bank_crashes_today)
   responee.headers['Content-Type'] = 'application/json'
   return responee
