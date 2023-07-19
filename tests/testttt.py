@@ -32,11 +32,13 @@ data = requests.get(url)
 # Parse data here
 print(data.text)
 # %%
+# %%
 import yfinance as yf
-msft = yf.Ticker("002142.SZ")
+msft = yf.Ticker("MSFT")
 # res=msft.get_info(proxy="https://194.182.163.117:3128")
-# res=msft.get_info()
-res=msft.history(period="120mo", proxy="91.203.25.28:4153")
+# res=msft.info()
+res=msft.get_info(proxy="91.203.25.28:4153")
+# res=msft.history(period="120mo", proxy="91.203.25.28:4153")
 # res=msft.get_info(proxy="http://41.65.103.27:1976")
 # res=msft.get_info(proxy="27.72.244.228:8080")
 print(res)
