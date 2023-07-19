@@ -9,7 +9,7 @@ import json
 from oracle_currency import get_historical_exchange_rate
 from oracle_EOD import recalculate_shares_from_EOD, get_market_cap_from_EOD
 from oracle_blockchain import sync_blockchain_information
-from utils import argmax, log_round
+from utils import argmax, log_round, today_ts
 from HARDCODED_VALUES import QUARTER_DATES, BANK_INFO
 from ETL import correct_data
 
