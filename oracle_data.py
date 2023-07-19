@@ -131,7 +131,7 @@ def request_data(tickername):
   #   continue
   try:
     ticker = yf.Ticker(tickername)
-    res = ticker.history(period="120mo", proxy="91.203.25.28:4153")  # BUSE divident event out of range???
+    res = ticker.history(period="120mo")  # , proxy="91.203.25.28:4153"  BUSE divident event out of range???
     if res["High"].size==0:
       return {}
     MC_list = get_market_cap_from_EOD(tickername)
