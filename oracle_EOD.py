@@ -23,6 +23,8 @@ def get_market_cap_from_EOD(tickername):
 	MC_res = requests.get(url)
 	if MC_res.text == "Ticker Not Found.":
 		return []
+	elif MC_res.text == "Unauthenticated":
+		assert False, "Unauthenticated... use valid config_accounts.py"
 	elif MC_res.text[0:14] == "Error occurred":
 		print("WE throw a valid bank away!!! THIS IS NOT GOOD... WHAT is going on with the server?")
 		return []
