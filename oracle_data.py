@@ -92,9 +92,9 @@ class DB_Banks:
 
 
 def bank_size_category(bank):
-    if bank["MC"] > LARGE_BANK_SIZE:
+    if bank["ATH_MC"] > LARGE_BANK_SIZE:
       return LARGE_BANK
-    elif bank["MC"] > MEDIUM_BANK_SIZE:
+    elif bank["ATH_MC"] > MEDIUM_BANK_SIZE:
       return MEDIUM_BANK
     else:
       return SMALL_BANK
@@ -104,7 +104,7 @@ def bank_format(bank):
         "shortname": bank['shortname'],
         "ticker": bank["ticker"],
         "type": bank_size_category(bank),
-        "MC": bank["MC"],
+        "ATH_MC": bank["ATH_MC"],
         "price": bank["price"],
         "MDD": bank["MDD"],
         "CRASH_date": bank["CRASH_date"],
@@ -175,7 +175,7 @@ def request_data(tickername):
       "shortname": ticker_info['shortName'],
       "ticker": tickername,
       "size": round(math.log10(marketcap_million_usd), 3),
-      "MC": round(marketcap_million_usd, 0),
+      "ATH_MC": round(marketcap_million_usd, 0),
       "price": log_round(minv),
       "MDD": log_round(mdd),
       "CRASH_date": crash_date_ts,
