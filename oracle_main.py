@@ -1,4 +1,4 @@
 from oracle import main
 
-
-main()
+multithreaded = True
+main(multithreaded)

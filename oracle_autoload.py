@@ -3,6 +3,6 @@
 %autoreload 2
 
 from oracle import main
-main()
+main(False)
 
 # %%

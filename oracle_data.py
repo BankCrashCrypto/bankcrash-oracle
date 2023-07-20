@@ -29,13 +29,16 @@ class DB_Banks:
         self.bank_crashes_today = {}
         return
 
-    def download(self):
+    def download(self, multithreaded):
         all_banks = pd.read_csv("banks.csv", names=["name", "ticker"])
         print("CSV is loaded!")
         # print(all_banks)
-        # unfiltered_data = map(request_data, all_banks["ticker"][295:])
-        unfiltered_data = map(request_data, all_banks["ticker"])
-        # unfiltered_data = p_map(request_data, all_banks["ticker"])
+        if multithreaded:
+          unfiltered_data = p_map(request_data, all_banks["ticker"])
+        else:
+          # unfiltered_data = map(request_data, all_banks["ticker"][295:])
+          unfiltered_data = map(request_data, all_banks["ticker"])
+        
         self.all = list(filter(lambda d: d, unfiltered_data))
         return
       
@@ -50,8 +53,8 @@ class DB_Banks:
         sync_blockchain_information(self.bank_crashes_stats[SMALL_BANK],self.bank_crashes_stats[MEDIUM_BANK],self.bank_crashes_stats[LARGE_BANK])
         return
       
-    def refresh(self):
-        self.download()
+    def refresh(self, multithreaded):
+        self.download(multithreaded)
         self.prepare_structures()
         return 
       
@@ -119,7 +122,7 @@ def request_data(tickername):
   #   continue
   try:
     ticker = yf.Ticker(tickername)
-    res = ticker.history(period="120mo")  # , proxy="91.203.25.28:4153"  BUSE divident event out of range???
+    res = ticker.history(period="121mo")  # , proxy="91.203.25.28:4153"  BUSE divident event out of range???
     if res["High"].size==0:
       return {}
     MC_list = get_market_cap_from_EOD(tickername)

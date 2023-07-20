@@ -13,9 +13,9 @@ async def async_run_data_server(data):
     time.sleep(1000)
     data.refresh()
   
-def main():
+def main(multithreaded):
   print("data is loading...")
-  data.refresh()
+  data.refresh(multithreaded)
   print("data is initialized!")
 
   loop = asyncio.get_event_loop()
