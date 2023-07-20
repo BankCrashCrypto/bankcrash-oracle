@@ -2,5 +2,7 @@
 %load_ext autoreload
 %autoreload 2
 
-import oracle
+from oracle import main
+main()
 
+# %%

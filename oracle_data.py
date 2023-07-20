@@ -145,6 +145,7 @@ def request_data(tickername):
   mdd = (1-minv / maxv) * 100
   # for (i, qq) in (res.iloc[2268:2273].iterrows()):
   #   print(i, qq)
+  # print(minv, maxv)
   
   # print(list(row for row in res.iloc[max_i:].iterrows() if 1-row[1]["Close"] / maxv < CRASH_MDD_VALUE/100))
   first_crash_date = next((i for i, row in res.iloc[max_i:].iterrows() if (1-row["Close"] / maxv > CRASH_MDD_VALUE/100)), -1)
