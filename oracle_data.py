@@ -115,22 +115,25 @@ def bank_format(bank):
   
 def request_data(tickername):
   # if tickername != "SBNY":
-  # if tickername != "CPI.JO":
+  # if tickername != "CVLY":
   #   return {}
   print((tickername))
   # if tickername in ["BIMB.KL", "BSMX", "ITCB", "LMST", "SI"]: # delisted banks from yahoo
   #   continue
   try:
     ticker = yf.Ticker(tickername)
-    res = ticker.history(period="121mo")  # , proxy="91.203.25.28:4153"  BUSE divident event out of range???
+    res = ticker.history(period="120mo")  # , proxy="91.203.25.28:4153"  BUSE divident event out of range???
     if res["High"].size==0:
       return {}
-    MC_list = get_market_cap_from_EOD(tickername)
+  except Exception as e:
+    if (str(e)[0:49]== "The following 'Dividends' events are out-of-range"):
+      res = ticker.history(period="121mo") 
+    else:
+      return {}
   except requests.exceptions.HTTPError as e:
     print(e)
     return {}
-  if res["High"].size == 0:
-    print("WTFFF???", res)
+  MC_list = get_market_cap_from_EOD(tickername)
   correct_data(tickername, res)
   max_i, maxv = argmax(res["High"]), max(res["High"])
   minv = min(res["Close"][max_i:])
