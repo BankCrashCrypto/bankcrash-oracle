@@ -33,6 +33,7 @@ def to_EOD_TICKER(ticker):
 def correct_data(tickername, res):
   if tickername == "CPI.JO":
     res.drop(res.iloc[2270].name, inplace=True)
+    res.drop(res.iloc[2268].name, inplace=True)
   else:
     return
   
