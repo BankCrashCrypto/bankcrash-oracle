@@ -110,7 +110,10 @@ QUARTER_DATES=[
 
 
 
-
+PENNIES = {
+    "ZAR": "ZAc",
+    "GDP": "GDp",
+}
 
 BANK_INFO = {
     "000001.SZ": {"shortName": "PING AN BANK", "currency": "CNY" },

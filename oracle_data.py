@@ -10,7 +10,7 @@ from oracle_currency import get_historical_exchange_rate
 from oracle_EOD import recalculate_shares_from_EOD, get_market_cap_from_EOD
 from oracle_blockchain import sync_blockchain_information
 from utils import argmax, log_round, today_ts
-from HARDCODED_VALUES import QUARTER_DATES, BANK_INFO
+from HARDCODED_VALUES import QUARTER_DATES, BANK_INFO, PENNIES
 from ETL import correct_data
 
 from CONSTANTS import LARGE_BANK_SIZE, MEDIUM_BANK_SIZE, SMALL_BANK_SIZE, LARGE_BANK, MEDIUM_BANK, SMALL_BANK, CRASH_MDD_VALUE
@@ -163,6 +163,8 @@ def request_data(tickername):
   ticker_info = BANK_INFO[tickername]
   currenci = ticker_info["currency"]
   exchrate = get_historical_exchange_rate(currenci, 'USD', datetime.fromtimestamp(max_marketcap["date"]).strftime('%Y-%m-%d'))
+  if currenci in PENNIES.keys():
+    exchrate *= 0.01
   marketcap_million_usd = marketcap_million * exchrate
   
   if mdd <= 0 or marketcap_million_usd < 0 or minv < 0 or maxv < 0:
