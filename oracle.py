@@ -26,7 +26,7 @@ def main(multithreaded):
   true_ip_address = requests.get('http://ifconfig.me').text
   port = 8080
   print(f"Running server on http://{ip_address}:{port}  ({true_ip_address}) {hostname}")
-  serve(app, host=hostname, port=port)
+  serve(app, host=hostname, port=port, url_scheme='https')
 
 # main()
 # %%
