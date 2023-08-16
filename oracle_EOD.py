@@ -59,6 +59,9 @@ def recalculate_shares_from_EOD(ticker, res):
 			price = res["Close"][ti]
 			market_cap.append({"value": price * share["shares"], "date": res.index[ti].timestamp()})
 
+	if not market_cap:
+		print("empty MC... no shares appended :( ", ticker)
+		return []
 	if math.isnan(market_cap[0]["value"]):
 		print("NAN", shares)
 
