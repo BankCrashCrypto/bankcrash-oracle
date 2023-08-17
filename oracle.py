@@ -24,7 +24,7 @@ def main(multithreaded):
   hostname = socket.gethostname()
   ip_address = socket.gethostbyname(hostname)# %%
   true_ip_address = requests.get('http://ifconfig.me').text
-  port = 8080
+  port = 8079
   print(f"Running server on http://{ip_address}:{port}  ({true_ip_address}) {hostname}")
   serve(app, host=hostname, port=port, url_scheme='https')
 
